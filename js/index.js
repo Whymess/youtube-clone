@@ -1,35 +1,30 @@
 (function() {
   getDynmaic();
-
 })();
 
+function loadIngState(loadingstate, errorMessage = "") {
+  if (loadingstate === true) {
+    var Containerloader = document.createElement("div");
+    Containerloader.setAttribute("class", "Containerloader");
+    document.body.append(Containerloader);
 
-function loadIngState(loadingstate, errorMessage=''){
-  if(loadingstate === true){
-     var Containerloader = document.createElement("div")
-      Containerloader.setAttribute("class", "Containerloader");
-      document.body.append(Containerloader)
-
-     var loader = document.createElement('div')
-      loader.setAttribute("class", "loader");
-      Containerloader.append(loader)
+    var loader = document.createElement("div");
+    loader.setAttribute("class", "loader");
+    Containerloader.append(loader);
   }
 
-  if(loadingstate === false){
-        var elem = document.getElementsByClassName("Containerloader")[0];
-        elem.remove();
+  if (loadingstate === false) {
+    var elem = document.getElementsByClassName("Containerloader")[0];
+    elem.remove();
   }
 
-  if(errorMessage.length > 0){
-   alert(errorMessage)
+  if (errorMessage.length > 0) {
+    alert(errorMessage);
   }
- 
-
-
 }
 
 function getDynmaic() {
-  loadIngState(true)
+  loadIngState(true);
   var request = new Request(
     "https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=50&key=AIzaSyB3-Zt0C1NklDYxOFxokd7sV9V9nJYs0d4"
   );
@@ -52,28 +47,32 @@ function getDynmaic() {
           url
         };
       });
-      if (responseArray.length === 0){
-        loadIngState(true, 'No movies returned')
+      if (responseArray.length === 0) {
+        loadIngState(true, "No movies returned");
       }
-      loadIngState(false)
+      loadIngState(false);
       this.createDivsToBeRepalced(responseArray);
-    }).catch(function() {
-        loadIngState(true, 'No movies returned')
+    })
+    .catch(function() {
+      loadIngState(true, "No movies returned");
     });
-
-
 }
 
 function createDivsToBeRepalced(responseArray) {
   var videosContainer = document.getElementsByClassName("container")[0];
 
   responseArray.forEach(item => {
-    var description = item['description']
+    var description = item["description"];
     var videoId = item["id"];
     var imageUrl = item["url"];
     var title = item["title"];
 
-    var newVideoCard = this.createVideoCard(videoId, imageUrl, title, description);
+    var newVideoCard = this.createVideoCard(
+      videoId,
+      imageUrl,
+      title,
+      description
+    );
 
     videosContainer.append(newVideoCard);
   });
@@ -112,22 +111,23 @@ function createVideoModal(videoUrl) {
   return fullModalContainer;
 }
 
-
-function showHoverDesc(evt){
-  var handleOnId = this.id
-  document.getElementById(handleOnId).innerHTML =  evt.target.desc;
+function showHoverDesc(evt) {
+  var handleOnId = this.id;
+  document.getElementById(handleOnId).innerHTML = evt.target.desc;
 }
 
-function HideDesc(evt){
-  var handleOnId = this.id
-   document.getElementById(handleOnId).innerHTML =  evt.target.title;
+function HideDesc(evt) {
+  var handleOnId = this.id;
+  document.getElementById(handleOnId).innerHTML = evt.target.title;
 }
 
 function createVideoTitle(titleText) {
   var div = document.createElement("div");
-  var uniqueID = Math.random().toString(36).substr(2, 9)
+  var uniqueID = Math.random()
+    .toString(36)
+    .substr(2, 9);
   div.setAttribute("class", "video-title");
-  div.setAttribute('id', uniqueID)
+  div.setAttribute("id", uniqueID);
   div.innerHTML = titleText;
   return div;
 }
@@ -139,7 +139,6 @@ function createVideoDescription(description) {
   return div;
 }
 
-
 function createThumbNail(id, url) {
   var img = document.createElement("img");
   img.src = url;
@@ -147,14 +146,12 @@ function createThumbNail(id, url) {
   return img;
 }
 
-
 function createVideoCard(videoId, imageUrl, title, description) {
   var newVideoCard = document.createElement("div");
   newVideoCard.setAttribute("class", "video-card");
   newVideoCard.setAttribute("id", videoId);
 
-  var descriptionForVideoDesc = createVideoDescription(description)
-
+  var descriptionForVideoDesc = createVideoDescription(description);
 
   var titleForVideoCard = createVideoTitle(title);
   var newVideoImage = this.createThumbNail(videoId, imageUrl);
@@ -162,17 +159,15 @@ function createVideoCard(videoId, imageUrl, title, description) {
   newVideoCard.append(newVideoImage);
   newVideoCard.append(titleForVideoCard);
 
-  titleForVideoCard.addEventListener('mouseover', showHoverDesc, false)
-  titleForVideoCard.desc = trunciateDesc(description)
-  titleForVideoCard.addEventListener('mouseout', HideDesc, false)
-  titleForVideoCard.title = title
+  titleForVideoCard.addEventListener("mouseover", showHoverDesc, false);
+  titleForVideoCard.desc = trunciateDesc(description);
+  titleForVideoCard.addEventListener("mouseout", HideDesc, false);
+  titleForVideoCard.title = title;
 
   newVideoCard.addEventListener("click", showVideo, false);
   return newVideoCard;
 }
 
-
-function trunciateDesc(string){
+function trunciateDesc(string) {
   return string.substring(0, 120) + "...";
 }
-
