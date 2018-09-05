@@ -1,0 +1,1 @@
+Hovering over the title text, will display the description. Clicking on the image, will open a modal, which will play the moive. Entire project is done without any libraries. To run, simply open the index file. 
